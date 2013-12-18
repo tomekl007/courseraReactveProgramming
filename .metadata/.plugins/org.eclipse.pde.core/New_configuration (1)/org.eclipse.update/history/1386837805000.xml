@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config date="1386837805838" transient="false" version="3.0">
+<site enabled="true" policy="USER-EXCLUDE" updateable="true" url="platform:/base/">
+<feature id="org.scala-ide.sdt.feature" plugin-identifier="org.scala-ide.sdt.core" url="features/org.scala-ide.sdt.feature_3.0.2.v-2_10-201310181157-0880865/" version="3.0.2.v-2_10-201310181157-0880865">
+</feature>
+<feature id="org.eclipse.equinox.p2.core.feature" url="features/org.eclipse.equinox.p2.core.feature_1.2.1.v20130827-1605/" version="1.2.1.v20130827-1605">
+</feature>
+<feature id="com.github.eclipsecolortheme.feature" url="features/com.github.eclipsecolortheme.feature_0.12.0.201207240713/" version="0.12.0.201207240713">
+</feature>
+<feature id="org.eclipse.platform" url="features/org.eclipse.platform_4.3.1.v20130911-1000/" version="4.3.1.v20130911-1000">
+</feature>
+<feature id="org.eclipse.rcp" url="features/org.eclipse.rcp_4.3.1.v20130911-1000/" version="4.3.1.v20130911-1000">
+</feature>
+<feature id="org.eclipse.jdt" url="features/org.eclipse.jdt_3.9.1.v20130911-1000/" version="3.9.1.v20130911-1000">
+</feature>
+<feature id="org.eclipse.m2e.feature" plugin-identifier="org.eclipse.m2e.core" url="features/org.eclipse.m2e.feature_1.4.0.20130601-0317/" version="1.4.0.20130601-0317">
+</feature>
+<feature id="org.scalaide.worksheet.feature" plugin-identifier="org.scalaide.worksheet" url="features/org.scalaide.worksheet.feature_0.2.1.v-2_10-201310181203-557328b/" version="0.2.1.v-2_10-201310181203-557328b">
+</feature>
+<feature id="org.eclipse.help" plugin-identifier="org.eclipse.help.base" url="features/org.eclipse.help_2.0.1.v20130911-1000/" version="2.0.1.v20130911-1000">
+</feature>
+<feature id="org.eclipse.emf.ecore" url="features/org.eclipse.emf.ecore_2.9.1.v20130827-0309/" version="2.9.1.v20130827-0309">
+</feature>
+<feature id="org.eclipse.e4.rcp" url="features/org.eclipse.e4.rcp_1.2.1.v20130910-2014/" version="1.2.1.v20130910-2014">
+</feature>
+<feature id="org.scala-ide.sdt.weaving.feature" url="features/org.scala-ide.sdt.weaving.feature_3.0.2.v-2_10-201310181157-0880865/" version="3.0.2.v-2_10-201310181157-0880865">
+</feature>
+<feature id="org.eclipse.emf.common" url="features/org.eclipse.emf.common_2.9.1.v20130827-0309/" version="2.9.1.v20130827-0309">
+</feature>
+<feature id="org.scala-ide.sdk.feature" plugin-identifier="org.scala-ide.sdk" url="features/org.scala-ide.sdk.feature_3.0.0.201310281833/" version="3.0.0.201310281833">
+</feature>
+<feature id="org.eclipse.equinox.p2.rcp.feature" url="features/org.eclipse.equinox.p2.rcp.feature_1.2.0.v20130828-0031/" version="1.2.0.v20130828-0031">
+</feature>
+<feature id="org.scala-ide.play2.feature" plugin-identifier="org.scala-ide.play2" url="features/org.scala-ide.play2.feature_0.4.1.v-2_10-201310181204-436b09f/" version="0.4.1.v-2_10-201310181204-436b09f">
+</feature>
+<feature id="org.eclipse.equinox.p2.user.ui" url="features/org.eclipse.equinox.p2.user.ui_2.2.0.v20130828-0031/" version="2.2.0.v20130828-0031">
+</feature>
+<feature id="org.eclipse.pde" url="features/org.eclipse.pde_3.9.1.v20130911-1000/" version="3.9.1.v20130911-1000">
+</feature>
+<feature id="org.eclipse.cvs" url="features/org.eclipse.cvs_1.4.0.v20130911-1000/" version="1.4.0.v20130911-1000">
+</feature>
+<feature id="org.eclipse.equinox.p2.extras.feature" url="features/org.eclipse.equinox.p2.extras.feature_1.2.0.v20130827-1605/" version="1.2.0.v20130827-1605">
+</feature>
+<feature id="org.maven.ide.eclipse.scala_feature" url="features/org.maven.ide.eclipse.scala_feature_0.4.3.201303250910/" version="0.4.3.201303250910">
+</feature>
+</site>
+</config>

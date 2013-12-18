@@ -1,0 +1,237 @@
+package kvstore
+
+import akka.actor.{ OneForOneStrategy, Props, ActorRef, Actor }
+import kvstore.Arbiter._
+import scala.collection.immutable.Queue
+import akka.actor.SupervisorStrategy.Restart
+import scala.annotation.tailrec
+import akka.pattern.{ ask, pipe }
+import akka.actor.Terminated
+import scala.concurrent.duration._
+import akka.actor.PoisonPill
+import akka.actor.OneForOneStrategy
+import akka.actor.SupervisorStrategy
+import akka.util.Timeout
+
+
+object Replica {
+  sealed trait Operation {
+    def key: String
+    def id: Long
+  }
+  case class Insert(key: String, value: String, id: Long) extends Operation
+  case class Remove(key: String, id: Long) extends Operation
+  case class Get(key: String, id: Long) extends Operation
+
+  sealed trait OperationReply
+  case class OperationAck(id: Long) extends OperationReply
+  case class OperationFailed(id: Long) extends OperationReply
+  case class GetResult(key: String, valueOption: Option[String], id: Long) extends OperationReply
+
+  def props(arbiter: ActorRef, persistenceProps: Props): Props = Props(new Replica(arbiter, persistenceProps))
+}
+
+class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
+  import Replica._
+  import Replicator._
+  import Persistence._
+  import context.dispatcher
+
+  /*
+   * The contents of this actor is just a suggestion, you can implement it in any way you like.
+   */
+  
+  override def preStart():Unit = {
+    arbiter ! Join
+  }
+  
+  var kv = Map.empty[String, String]
+  // a map from secondary replicas to replicators
+  var secondaries = Map.empty[ActorRef, ActorRef]
+  // the current set of replicators
+  var replicators = Set.empty[ActorRef]
+
+  def receive = {
+    case JoinedPrimary   => { println("current Relpica become primary"); context.become(leader) }
+    case JoinedSecondary => { println("current Relpica become replica"); context.become(replica) }
+  }
+
+  /* TODO Behavior for  the leader role. */
+  val leader: Receive = {
+    case Insert(key: String, value: String, id: Long) => handleInsert(key, value, id)
+    case Get(key:String, id:Long) => handleGet(key, id) 
+    case Remove(key: String, id: Long) => handleRemove(key, id)
+    case Replicas(replicas: Set[ActorRef]) => allocateNewReplicator(replicas:Set[ActorRef])
+  }
+  
+  
+  var waitingForAck = Set.empty[Long]
+  def allocateNewReplicator(replicas:Set[ActorRef]){
+    println("leader receive replica msg"+ replicas)
+    replicas.foreach(a=> {
+      val replicator = context.actorOf(Props(new Replicator(a)))
+      secondaries = secondaries + (replicator -> a)    
+    })
+    println("secondaries : " + secondaries)
+    println("kv before iteratior : " + kv)
+    for (
+    	i <- replicas;
+        j <- kv
+    	) {
+      println("send snapshot to " + i)
+      val seqI:Long = nextSeq
+      waitingForAck = waitingForAck + seqI
+      i ! Snapshot(j._1, Option(j._2), seqI)
+      
+    }
+    context.become(onlyGetReq)
+    
+    
+     //primary receives a new Replicas message and must
+    //allocate a new actor of type Replicator for the new replica; add to secondaries
+  }
+  
+  
+  def onlyGetReq : Receive = {
+
+    case Get(key:String, id:Long) => handleGet(key, id) 
+    case SnapshotAck(key, id) => {
+      waitingForAck = waitingForAck - id
+      if(waitingForAck.isEmpty) context.become(leader)
+    }
+  }
+  
+  var tryPersistOp = Map.empty[Long,(ActorRef, Persist)]
+  def handleInsert(key:String, value:String, id:Long){
+    println(s"handleInsert id $id, [k,v]: [$key, $value]")
+    kv = kv + (key -> value)
+    //todo something like this context.become(waitingForPersistAck(sender, id))
+    tryPersistOp = tryPersistOp + (id ->(sender, Persist(key, Option(value), id)))
+    
+    val pers = context.actorOf(persistenceProps)
+    pers ! Persist(key, Option(value), id)
+    context.become(waitingForPersistOpAck(sender))
+    //sender ! OperationAck(id)
+    //todo to failed after one sec use watch()
+  }
+  
+  def handleGet(key:String, id:Long){
+    println(s"handleGet id: $id, key : $key")
+    sender ! GetResult(key, kv.get(key), id)
+  } 
+  
+  def handleRemove(key:String, id:Long){
+    println(s"handleRemove id: $id, key : $key")
+    kv = kv - key
+    
+    tryPersistOp = tryPersistOp + (id -> (sender,Persist(key, None, id)))
+    
+    val pers = context.actorOf(persistenceProps)
+    pers ! Persist(key, None, id)
+    context.become(waitingForPersistOpAck(sender))
+    
+    //sender ! OperationAck(id)
+  }
+
+   var _seqCounter = 0L
+   def nextSeq = {
+    val ret = _seqCounter
+    _seqCounter += 1
+    ret
+   }
+  /* TODO Behavior for the replica role. */
+  val replica: Receive = {
+    case Get(key:String, id:Long) => handleGet(key, id) 
+    case Snapshot(key: String, valueOption: Option[String], seq: Long) =>
+      handleSnapshot(key: String, valueOption: Option[String], seq: Long)
+  }
+  
+  //todo inside this method send persist , see persistanceProps
+  def handleSnapshot(key: String, valueOption: Option[String], seq: Long) {
+    //val expectedSeq = _seqCounter + 1 
+    println(s"expectedSeq is ${_seqCounter}")
+    println(s"handleSnapshot for [k,Option[V]] : $key, $valueOption, seq : $seq")
+    if(seq > _seqCounter){}//ignore
+    else if(seq < _seqCounter) {
+      _seqCounter = if (_seqCounter > seq + 1) _seqCounter else seq + 1 
+      sender ! SnapshotAck(key, seq)//The expected number is set to the greater of
+      							//the previously expected number
+      							//the sequence number just acknowledged, incremented by one
+    }else{
+      valueOption match {
+        case Some(value) => { println(s"case Some($value)"); kv = kv.updated(key, value) }
+        case None => { println(s"case None so remove for $key"); kv = kv - key }
+      }
+      val pers = context.actorOf(persistenceProps)
+      pers ! Persist(key, valueOption, seq)
+      
+      tryPersist = tryPersist + (seq -> Persist(key, valueOption, seq))
+      
+      println("pass sender : " + sender)
+      context.become(waitingForPersistAck(sender, nextSeq))
+      //sender ! SnapshotAck(key, nextSeq)
+    }
+    //nextSeq
+  }
+  
+  
+  var tryPersist = Map.empty[Long, Persist] 
+    
+  def waitingForPersistAck(waiting:ActorRef, idS:Long) : Receive = {
+    case  Get(key:String, id:Long) => handleGet(key, id)
+    case Persisted(key, id) =>{
+      tryPersist = tryPersist - (id)
+      println(s"receive Persisted($key, $id)")
+      println("send SnapshotAck to " + waiting)
+      waiting ! SnapshotAck(key, idS)
+      context.become(replica)
+    }
+    
+  }
+  
+  def waitingForPersistOpAck(waiting:ActorRef) : Receive = {
+    case Get(key:String, id:Long) => handleGet(key,id)
+    case Persisted(key, id) => {
+      tryPersistOp =  tryPersistOp - (id)
+      waiting ! OperationAck(id)
+      context.become(leader)
+    }
+  }
+  
+  context.system.scheduler.schedule(Duration(0, MILLISECONDS),Duration(100, MILLISECONDS))({
+    // println("current tryPersist : " + tryPersist)
+     tryPersist.foreach(f=>{
+       val pers = context.actorOf(persistenceProps)
+       pers ! f._2
+     })
+  })
+
+   context.system.scheduler.schedule(Duration(0, MILLISECONDS),Duration(100, MILLISECONDS))({
+    // println("current tryPersistOp : " + tryPersistOp)
+     tryPersistOp.foreach(f=>{
+       val pers = context.actorOf(persistenceProps)
+       pers ! f._2._2
+     })
+  })
+  
+  
+   context.system.scheduler.schedule(Duration(1000, MILLISECONDS),Duration(1000, MILLISECONDS))({
+     //println("failed - >>> current tryPersistOp : " + tryPersistOp)
+     
+     tryPersistOp.foreach(f=>{
+      f._2._1 ! OperationFailed(f._2._2.id)
+     })
+  })
+  
+  context.system.scheduler.schedule(Duration(0, MILLISECONDS),Duration(100, MILLISECONDS))({
+    
+    secondaries.foreach(f => {
+      println("outer : " + f)
+      kv.foreach(k => {
+        println("send snapshot to " + f)
+         f._2 ! Snapshot(k._1, Option(k._2), nextSeq)  
+      })
+    })
+  })
+  
+}

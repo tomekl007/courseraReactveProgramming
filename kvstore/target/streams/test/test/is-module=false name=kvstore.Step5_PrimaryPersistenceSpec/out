@@ -1,0 +1,17 @@
+[0m[[0minfo[0m] [0m[32mStep5_PrimaryPersistenceSpec:[0m[0m
+[0m[[0minfo[0m] [0m[32m- case1: Primary does not acknowledge updates which have not been persisted[0m[0m
+[0m[[0minfo[0m] [0m[32m- case2: Primary retries persistence every 100 milliseconds[0m[0m
+[0m[[0minfo[0m] [0m[32m- case3: Primary generates failure after 1 second if persistence fails[0m[0m
+[0m[[0minfo[0m] [0m[31m- case4: Primary generates failure after 1 second if global acknowledgement fails *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  java.lang.AssertionError: assertion failed: timeout (3 seconds) during expectMsgClass waiting for class kvstore.Replicator$Snapshot[0m[0m
+[0m[[0minfo[0m] [0m[31m  at scala.Predef$.assert(Predef.scala:179)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.testkit.TestKitBase$class.expectMsgClass_internal(TestKit.scala:412)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.testkit.TestKitBase$class.expectMsgType(TestKit.scala:385)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.testkit.TestKit.expectMsgType(TestKit.scala:707)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at kvstore.Step5_PrimaryPersistenceSpec$$anonfun$6.apply$mcV$sp(Step5_PrimaryPersistenceSpec.scala:94)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at kvstore.Step5_PrimaryPersistenceSpec$$anonfun$6.apply(Step5_PrimaryPersistenceSpec.scala:82)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at kvstore.Step5_PrimaryPersistenceSpec$$anonfun$6.apply(Step5_PrimaryPersistenceSpec.scala:82)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.FunSuite$$anon$1.apply(FunSuite.scala:1265)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.Suite$class.withFixture(Suite.scala:1974)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at kvstore.Step5_PrimaryPersistenceSpec.withFixture(Step5_PrimaryPersistenceSpec.scala:15)[0m[0m
+[0m[[0minfo[0m] [0m[31m  ...[0m[0m

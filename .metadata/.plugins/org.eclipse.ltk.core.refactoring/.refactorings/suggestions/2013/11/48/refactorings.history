@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;Subjects.scala&apos; to &apos;suggestions/src/test/scala/suggestions&apos;&#x0A;- Original project: &apos;suggestions&apos;&#x0A;- Destination element: &apos;suggestions/src/test/scala/suggestions&apos;&#x0A;- Original element: &apos;Subjects.scala&apos;&#x0A;- Update references to refactored element" description="Move file" destination="/src\/test\/scala&lt;suggestions" element1="src/main/scala/suggestions/observablex/Subjects.scala" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1385501164946" units="0" version="1.0"/>
+</session>

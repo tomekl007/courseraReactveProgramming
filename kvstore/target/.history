@@ -1,0 +1,51 @@
+test-only
+test-only Step1*
+test-only kvstore.Step1_PrimarySpec
+submit tomekl007@gmail.com WnGDAMgbdN
+test-only kvstore.Step2_Secondary
+test-only kvstore.Step1_PrimarySpec
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step1_PrimarySpec
+test-only kvstore.Step2_SecondarySpec
+submit tomekl007@gmail.com WnGDAMgbdN
+test-only kvstore.Step2_ReplicatorSpec
+test-only kvstore.Step3_ReplicatorSpec
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step3_ReplicatorSpec
+submit tomekl007@gmail.com WnGDAMgbdN
+test-only kvstore.Step4_SecondaryPersistenceSpec
+test
+test-only kvstore.Step4_SecondaryPersistenceSpec
+test-only kvstore.Step4_SecondaryPersistenceSpec\
+test-only kvstore.Step4_SecondaryPersistenceSpec
+compile
+test-only kvstore.Step4_SecondaryPersistenceSpec
+test-only kvstore.Step3_ReplicatorSpec
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step4_SecondaryPersistenceSpec
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step2_SecondarySpec\
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step4_SecondaryPersistenceSpec
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step4_SecondaryPersistenceSpec
+test-only kvstore.Step2_SecondarySpec
+test-only kvstore.Step4_SecondaryPersistenceSpec
+submit tomekl007@gmail.com WnGDAMgbdN
+test-only kvstore.Step5_PrimaryPersistenceSpec
+submit tomekl007@gmail.com WnGDAMgbdN
+test-only kvstore.Step2_SecondarySpec
+st
+test
+test-only kvstore.Step5_PrimaryPersistenceSpec
+test
+test-only kvstore.Step5_PrimaryPersistenceSpec
+test
+submit tomekl007@gmail.com WnGDAMgbdN
+test-only kvstore.Step5_PrimaryPersistenceSpec
+test
+submit tomekl007@gmail.com WnGDAMgbdN
+test
+tes
+te
+test

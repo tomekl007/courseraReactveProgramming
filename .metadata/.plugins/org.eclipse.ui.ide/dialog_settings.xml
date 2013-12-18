@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+	</list>
+	<section name="ExternalProjectImportWizard">
+		<item value="true" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+		<item value="true" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value=""/>
+			<item value="/Users/tomaszlelek/intelliJ_workspace/rafaelsteil-jforum2-190d28b"/>
+			<item value="/Users/tomaszlelek/eclipseWorkspace/kvstore"/>
+			<item value="/Users/tomaszlelek/eclipseWorkspace/linkchecker"/>
+			<item value="/Users/tomaszlelek/eclipseWorkspace/actorbintree"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value="/Users/tomaszlelek/eclipseWorkspace/reactive-course source code-week7-2.zip"/>
+			<item value="/Users/tomaszlelek/Downloads/rafaelsteil-jforum2-190d28b.zip"/>
+			<item value=""/>
+		</list>
+	</section>
+	<section name="NewWizardAction">
+	</section>
+	<section name="CleanDialogSettings">
+		<item value="484" key="DIALOG_WIDTH"/>
+		<item value="true" key="BUILD_NOW"/>
+		<item value="true" key="BUILD_ALL"/>
+		<item value="142" key="DIALOG_Y_ORIGIN"/>
+		<item value="508" key="DIALOG_X_ORIGIN"/>
+		<item value="423" key="DIALOG_HEIGHT"/>
+		<item value="true" key="TOGGLE_SELECTED"/>
+	</section>
+</section>
